@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using WebAapi.Entities;
 
 namespace WebAapi.Controllers;
 

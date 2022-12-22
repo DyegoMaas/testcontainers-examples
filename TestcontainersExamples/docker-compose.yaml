@@ -1,0 +1,17 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:11
+    ports:
+      - "5555:5432"
+    environment:
+      - POSTGRES_USERNAME=${POSTGRESQL_USERNAME:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRESQL_PASSWORD:-postgres}
+      - POSTGRES_DB=database
+      - PGDATA=/data/postgres
+    hostname: postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5

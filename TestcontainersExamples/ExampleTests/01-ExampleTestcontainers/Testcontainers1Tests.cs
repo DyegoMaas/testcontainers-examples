@@ -18,6 +18,7 @@ public class Testcontainers1Tests : IAsyncLifetime
             .WithEnvironment("POSTGRES_USERNAME", "customUser")
             .WithEnvironment("POSTGRES_PASSWORD", "customPassword")
             .WithPortBinding(5555, 5432)
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
             .Build();
     
     [Fact]

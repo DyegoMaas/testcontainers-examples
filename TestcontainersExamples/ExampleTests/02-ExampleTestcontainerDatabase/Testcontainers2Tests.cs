@@ -4,7 +4,7 @@ using DotNet.Testcontainers.Containers;
 using FluentAssertions;
 using Npgsql;
 
-namespace ExampleTests.Example2;
+namespace ExampleTests;
 
 public class Testcontainers2Tests : IAsyncLifetime
 {
