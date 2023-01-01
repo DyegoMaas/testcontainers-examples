@@ -4,15 +4,17 @@ using FluentAssertions;
 using WebAapi.Controllers;
 using WebAapi.Entities;
 
-namespace ExampleTests._03_ExampleTestInfrastructure;
+namespace ExampleTests._04_ExampleClassFixture;
 
-public class GetCustomerTests : CustomerApiFactory
+public class GetCustomerTests : IClassFixture<CustomerApiFactory>, IAsyncLifetime
 {
+    private readonly CustomerApiFactory _applicationFactory;
     private readonly HttpClient _httpClient;
 
-    public GetCustomerTests()
+    public GetCustomerTests(CustomerApiFactory applicationFactory)
     {
-        _httpClient = CreateDefaultClient();
+        _applicationFactory = applicationFactory;
+        _httpClient = applicationFactory.CreateDefaultClient();
     }
 
     [Fact]
@@ -53,5 +55,15 @@ public class GetCustomerTests : CustomerApiFactory
         var customer = await _httpClient.GetAsync<Customer>($"/Customers/{postResponse.Id}");
 
         customer.Name.Should().Be("Test Customer");
+    }
+
+    public Task InitializeAsync()
+    {
+        return _applicationFactory.InitializeAsync();
+    }
+
+    public Task DisposeAsync()
+    {
+        return _applicationFactory.DisposeAsync();
     }
 }

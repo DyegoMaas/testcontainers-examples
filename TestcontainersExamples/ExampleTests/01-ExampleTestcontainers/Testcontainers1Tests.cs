@@ -17,14 +17,14 @@ public class Testcontainers1Tests : IAsyncLifetime
             .WithEnvironment("PGDATA", "/data/postgres")
             .WithEnvironment("POSTGRES_USERNAME", "customUser")
             .WithEnvironment("POSTGRES_PASSWORD", "customPassword")
-            .WithPortBinding(5555, 5432)
+            .WithPortBinding(5556, 5432)
             .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
             .Build();
     
     [Fact]
     public async Task Should_Select1_FromDatabase()
     {
-        await using var connection = new NpgsqlConnection("Host=localhost:5555;Username=customUser;Password=customPassword;Database=testdatabase");
+        await using var connection = new NpgsqlConnection("Host=localhost:5556;Username=customUser;Password=customPassword;Database=testdatabase");
         await connection.OpenAsync();
 
         var command = new NpgsqlCommand("SELECT 1", connection);

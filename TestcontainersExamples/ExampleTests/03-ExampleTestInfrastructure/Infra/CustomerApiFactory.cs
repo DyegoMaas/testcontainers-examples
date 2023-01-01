@@ -1,16 +1,23 @@
 ﻿using System.Data.Common;
 using System.Data.Entity.Infrastructure;
+using System.Net;
+using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Npgsql;
 using WebAapi;
+using WebAapi.Database;
 
-namespace ExampleTests._03_ExampleTestInfrastructure;
+namespace ExampleTests._03_ExampleTestInfrastructure.Infra;
 
 public class CustomerApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
 {
@@ -43,6 +50,9 @@ public class CustomerApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifet
     public async Task InitializeAsync()
     {
         await _dbContainer.StartAsync();
+
+        var scope = Services.CreateScope();
+        await scope.ServiceProvider.GetService<DatabaseContext>().Database.MigrateAsync();
     }
     
     public async Task DisposeAsync()

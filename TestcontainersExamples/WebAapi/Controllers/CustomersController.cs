@@ -8,23 +8,19 @@ namespace WebAapi.Controllers;
 [Route("[controller]")]
 public class CustomersController : ControllerBase
 {
-    private readonly ILogger<CustomersController> _logger;
-
-    public CustomersController(ILogger<CustomersController> logger)
-    {
-        _logger = logger;
-    }
-
     [HttpPost(Name = "PostCustomer")]
     public async Task<ActionResult> Post([FromServices]DatabaseContext context, [FromBody]Customer customer)
     {
         await context.Customers.AddAsync(customer);
         await context.SaveChangesAsync();
         
-        return Ok(new { customer.Id });
+        return Ok(new NewId
+        {
+            Id = customer.Id
+        });
     }
     
-    [HttpGet("/{id:long}", Name = "GetCustomer")]
+    [HttpGet("{id:long}", Name = "GetCustomer")]
     public ActionResult Get([FromServices]DatabaseContext context, [FromRoute]long id)
     {
         var customer = context.Customers.FirstOrDefault(x => x.Id == id);
@@ -32,5 +28,12 @@ public class CustomersController : ControllerBase
         if (customer is null)
             return NotFound("Not found");
         return Ok(customer);
+    }
+    
+    [HttpGet(Name = "GetCustomers")]
+    public ActionResult Get([FromServices]DatabaseContext context)
+    {
+        var customers = context.Customers.ToList();
+        return Ok(customers);
     }
 }
