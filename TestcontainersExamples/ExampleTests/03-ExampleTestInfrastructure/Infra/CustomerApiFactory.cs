@@ -52,7 +52,8 @@ public class CustomerApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifet
         await _dbContainer.StartAsync();
 
         var scope = Services.CreateScope();
-        await scope.ServiceProvider.GetService<DatabaseContext>().Database.MigrateAsync();
+        var databaseContext = scope.ServiceProvider.GetService<DatabaseContext>();
+        await databaseContext.Database.MigrateAsync();
     }
     
     public async Task DisposeAsync()
